@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap');
+
+/* ============================================
+   LOGIN / REGISTER PAGE
+   ============================================ */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f0faf5;
+  font-family: 'Sora', sans-serif;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(5, 150, 105, 0.05) 0%, transparent 50%);
+  padding: 24px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  padding: 40px 36px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #d1fae5;
+  animation: cardIn 350ms cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.login-card h2 {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #064e3b;
+  letter-spacing: -0.4px;
+  margin-bottom: 28px;
+}
+
+/* ── Inputs ── */
+.login-card input {
+  width: 100%;
+  padding: 11px 14px;
+  margin-bottom: 14px;
+  font-size: 14px;
+  font-family: 'Sora', sans-serif;
+  color: #1f5c40;
+  background: #f8fefb;
+  border: 1.5px solid #d1fae5;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 200ms ease, box-shadow 200ms ease, background 200ms ease;
+  box-sizing: border-box;
+}
+
+.login-card input:focus {
+  border-color: #059669;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.12);
+}
+
+.login-card input::placeholder {
+  color: #6b9f88;
+}
+
+/* ── Button ── */
+.login-card button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 600;
+  background: #059669;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 4px;
+  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.3);
+  transition: background 200ms ease, transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 200ms ease;
+  letter-spacing: 0.01em;
+}
+
+.login-card button[type="submit"]:hover {
+  background: #047857;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.35);
+}
+
+.login-card button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+/* ── Footer text & link ── */
+.login-card p {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 13px;
+  color: #6b9f88;
+}
+
+.login-card p span {
+  color: #059669 !important;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+
+.login-card p span:hover {
+  color: #047857 !important;
+  text-decoration: underline;
+}
+
+/* ── Error message ── */
+.error,
+.register-error {
+  font-size: 13px;
+  color: #ef4444;
+  background: #fef2f2;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 9px 13px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+/* ============================================
+   REGISTER SUCCESS STATE
+   ============================================ */
+.register-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px 16px;
+  text-align: center;
+  animation: fadeInUp 400ms ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.register-success-icon {
+  font-size: 52px;
+  line-height: 1;
+}
+
+.register-success p {
+  font-size: 16px;
+  font-weight: 600;
+  color: #065f46;
+  margin: 0;
+}
+
+.register-redirect-msg {
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: #6b9f88 !important;
+}

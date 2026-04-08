@@ -1,0 +1,42 @@
+# OS
+.DS_Store
+
+# Env
+.env
+
+# Logs
+logs/
+
+# Backend
+backend/node_modules/
+
+# Frontend (React)
+frontend/frontend/node_modules/
+frontend/frontend/build/
+
+# General
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+
+model.pkl
+venv/
+node_modules/
+.env
+
+model.pkl
+venv/
+node_modules/
+.env
+
+# Images & junk
+*.png
+*.jpg
+*.jpeg
+*.mp4
+*.mov
+
+# Docs (optional)
+*.docx
+*.pdf
