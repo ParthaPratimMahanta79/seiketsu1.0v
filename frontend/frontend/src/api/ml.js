@@ -8,4 +8,4 @@ export const predictUser = async (userData) => {
   });
 
   return res.json();
-};s
+}
