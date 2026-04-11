@@ -1,5 +1,5 @@
 export const predictUser = async (userData) => {
-  const res = await fetch("https://seiketsu-backend.onrender.com/api/predict", {
+  const res = await fetch("https://seiketsu1-0v.onrender.com/predict", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
