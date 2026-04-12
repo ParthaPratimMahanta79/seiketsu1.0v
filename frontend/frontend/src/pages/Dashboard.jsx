@@ -84,7 +84,7 @@ export default function Dashboard() {
 
     try {
       const response = await fetch(
-        "https://seiketsu1-0v-3.onrender.com/api/dustbins",
+        "https://seiketsu1-0v-3.onrender.com/api/dustbins-requests",
         {
           method: "POST",
           headers: {
