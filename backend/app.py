@@ -24,16 +24,22 @@ y = np.array([1,0,1,0,1,0])
 model = LogisticRegression()
 model.fit(X, y)
 
+def safe_int(val, default=0):
+    try:
+        return int(val)
+    except (ValueError, TypeError):
+        return default
+
 @app.route("/predict", methods=["POST"])
 def predict():
     data = request.json
 
     user = [[
-        int(data['requests_made']),
-        int(data['bins_navigated']),
-        int(data['reports_sent']),
-        int(data['reports_approved']),
-        int(data['leaderboard_score'])
+        safe_int(data.get('requests_made', 0)),
+        safe_int(data.get('bins_navigated', 0)),
+        safe_int(data.get('reports_sent', 0)),
+        safe_int(data.get('reports_approved', 0)),
+        safe_int(data.get('leaderboard_score', 0))
     ]]
 
     prediction = model.predict(user)[0]
@@ -43,3 +49,7 @@ def predict():
         "engagement": int(prediction),
         "confidence": float(prob)
     })
+
+if __name__ == "__main__":
+   port = int(os.environ.get("PORT", 5001))
+   app.run(host="0.0.0.0", port=port)
