@@ -920,3 +920,20 @@
     max-width: 100%;
   }
 }
+.high-user {
+  color: #16a34a;
+  background: #dcfce7;
+  padding: 8px 16px;
+  border-radius: 12px;
+  display: inline-block;
+  font-weight: 600;
+}
+
+.risk-user {
+  color: #dc2626;
+  background: #fee2e2;
+  padding: 8px 16px;
+  border-radius: 12px;
+  display: inline-block;
+  font-weight: 600;
+}
