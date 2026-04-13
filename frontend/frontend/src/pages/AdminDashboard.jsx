@@ -9,7 +9,7 @@ export default function AdminDashboard() {
 
   const fetchRequests = useCallback(async () => {
     try {
-      const res = await fetch("https://seiketsu-backend.onrender.com/api/admin/requests", {
+      const res = await fetch("https://seiketsu1-0v-3.onrender.com/api/admin/requests", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -26,7 +26,7 @@ export default function AdminDashboard() {
   }, [fetchRequests]);
 
   const handleApprove = async (id) => {
-    await fetch(`https://seiketsu-backend.onrender.com/api/admin/requests/${id}/approve`, {
+    await fetch(`https://seiketsu1-0v-3.onrender.com/api/admin/requests/${id}/approve`, {
       method: "PATCH",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -34,7 +34,7 @@ export default function AdminDashboard() {
   };
 
   const handleReject = async (id) => {
-    await fetch(`https://seiketsu-backend.onrender.com/api/admin/requests/${id}/reject`, {
+    await fetch(`https://seiketsu1-0v-3.onrender.com/api/admin/requests/${id}/reject`, {
       method: "PATCH",
       headers: { Authorization: `Bearer ${token}` },
     });
