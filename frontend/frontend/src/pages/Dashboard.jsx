@@ -169,17 +169,20 @@ export default function Dashboard() {
         <p className="success-msg">✅ Dustbin request submitted successfully!</p>
       )}
 
-      {/* ML RESULT */}
-      {mlResult && (
-        <div style={{ marginTop: "20px", textAlign: "center" }}>
-          <h3>
-            {mlResult.engagement === 1
-              ? "🔥 High Engagement User"
-              : "⚠️ At Risk User"}
-          </h3>
-          <p>Confidence: {mlResult.confidence}</p>
-        </div>
-      )}
+    {/* ML RESULT */}
+{mlResult && (
+  <div style={{ marginTop: "20px", textAlign: "center" }}>
+    <h3 className={mlResult.engagement === 1 ? "high-user" : "risk-user"}>
+      <span className="badge-icon">
+        {mlResult.engagement === 1 ? "✓" : "!"}
+      </span>
+      {mlResult.engagement === 1 ? "High Engagement User" : "At Risk User"}
+      <span className="confidence-pill">
+        {Math.round(mlResult.confidence * 100)}% confidence
+      </span>
+    </h3>
+  </div>
+)}
 
       {/* MAP */}
       <div className="map-wrapper">
