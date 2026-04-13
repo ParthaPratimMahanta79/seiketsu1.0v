@@ -172,15 +172,17 @@ export default function Dashboard() {
     {/* ML RESULT */}
 {mlResult && (
   <div style={{ marginTop: "20px", textAlign: "center" }}>
-    <h3 className={mlResult.engagement === 1 ? "high-user" : "risk-user"}>
-      <span className="badge-icon">
-        {mlResult.engagement === 1 ? "✓" : "!"}
-      </span>
-      {mlResult.engagement === 1 ? "High Engagement User" : "At Risk User"}
-      <span className="confidence-pill">
-        {Math.round(mlResult.confidence * 100)}% confidence
-      </span>
-    </h3>
+   <div className={mlResult.engagement === 1 ? "high-user" : "risk-user"}>
+  <span className="badge-icon">
+    {mlResult.engagement === 1 ? "✓" : "!"}
+  </span>
+  <span>{mlResult.engagement === 1 ? "High Engagement User" : "At Risk User"}</span>
+  <span className="confidence-pill">
+    {mlResult.confidence !== undefined
+      ? Math.round(mlResult.confidence * 100) + "% confidence"
+      : ""}
+  </span>
+</div>
   </div>
 )}
 
