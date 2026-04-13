@@ -29,11 +29,11 @@ def predict():
     data = request.json
 
     user = [[
-        data['requests_made'],
-        data['bins_navigated'],
-        data['reports_sent'],
-        data['reports_approved'],
-        data['leaderboard_score']
+        int(data['requests_made']),
+        int(data['bins_navigated']),
+        int(data['reports_sent']),
+        int(data['reports_approved']),
+        int(data['leaderboard_score'])
     ]]
 
     prediction = model.predict(user)[0]
@@ -43,7 +43,3 @@ def predict():
         "engagement": int(prediction),
         "confidence": float(prob)
     })
-
-if __name__ == "__main__":
-   port = int(os.environ.get("PORT", 5001))
-   app.run(host="0.0.0.0", port=port)
