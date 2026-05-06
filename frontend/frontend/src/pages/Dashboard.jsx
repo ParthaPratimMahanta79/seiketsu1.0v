@@ -234,11 +234,11 @@ export default function Dashboard() {
               <span className="contact-card-value">parthapratimmahanta3@gmail.com</span>
             </div>
           </a>
-          <a href="tel:8822891436" className="contact-card">
+          <a href="tel:xxxyyyzzzx" className="contact-card">
             <div className="contact-icon">📞</div>
             <div className="contact-card-body">
               <span className="contact-card-label">Phone</span>
-              <span className="contact-card-value">+91 88228 91436</span>
+              <span className="contact-card-value">+91 xxxyyyzzzz</span>
             </div>
           </a>
         </div>
