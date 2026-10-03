@@ -1,55 +1,56 @@
-from flask import Flask, request, jsonify # type: ignore
-import pickle
-from flask_cors import CORS # type: ignore
+from flask import Flask, request, jsonify  # type: ignore
+from flask_cors import CORS  # type: ignore
 import os
+import pickle
+import pandas as pd
+from features import engineer_features, FEATURE_COLS_RAW
 
 app = Flask(__name__)
 CORS(app)
 
-# Load model
-from sklearn.linear_model import LogisticRegression # type: ignore
-import numpy as np # type: ignore
+# Load the pre-trained pipeline (trained offline via train_pipeline.py).
+# No inline training at request time or at startup — this is the fix for
+# the old approach, which retrained a LogisticRegression on 6 hard-coded
+# rows every single time the process started.
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "model.pkl")
+with open(MODEL_PATH, "rb") as f:
+    bundle = pickle.load(f)
 
-X = np.array([
-    [2,5,1,1,10],
-    [0,1,0,0,2],
-    [3,6,2,2,15],
-    [1,0,1,0,3],
-    [4,7,3,3,20],
-    [1,2,0,0,4]
-])
+model = bundle["model"]
+label_map = bundle["label_map"]          # {0: "At Risk", 1: "High Engagement"}
 
-y = np.array([1,0,1,0,1,0])
 
-model = LogisticRegression()
-model.fit(X, y)
-
-def safe_int(val, default=0):
+def safe_float(val, default=0.0):
     try:
-        return int(val)
+        return float(val)
     except (ValueError, TypeError):
         return default
 
+
 @app.route("/predict", methods=["POST"])
 def predict():
-    data = request.json
+    data = request.json or {}
 
-    user = [[
-        safe_int(data.get('requests_made', 0)),
-        safe_int(data.get('bins_navigated', 0)),
-        safe_int(data.get('reports_sent', 0)),
-        safe_int(data.get('reports_approved', 0)),
-        safe_int(data.get('leaderboard_score', 0))
-    ]]
+    row = {col: safe_float(data.get(col, 0)) for col in FEATURE_COLS_RAW}
+    X_raw = pd.DataFrame([row])
+    X = engineer_features(X_raw)
 
-    prediction = model.predict(user)[0]
-    prob = model.predict_proba(user)[0][1]
+    prediction = int(model.predict(X)[0])
+    prob = float(model.predict_proba(X)[0][1])
 
+    # Same response shape as the original API: {"engagement": 0/1, "confidence": float}
+    # so nothing calling this endpoint needs to change on that side.
     return jsonify({
-        "engagement": int(prediction),
-        "confidence": float(prob)
+        "engagement": prediction,
+        "confidence": round(prob, 4)
     })
 
+
+@app.route("/health", methods=["GET"])
+def health():
+    return jsonify({"status": "ok"})
+
+
 if __name__ == "__main__":
-   port = int(os.environ.get("PORT", 5001))
-   app.run(host="0.0.0.0", port=port)
+    port = int(os.environ.get("PORT", 5001))
+    app.run(host="0.0.0.0", port=port)

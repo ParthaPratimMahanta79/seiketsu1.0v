@@ -19,6 +19,7 @@ const adminRoutes = require("./routes/admin.routes");
 const statsRoutes = require("./routes/stats.routes");
 const notificationRoutes = require("./routes/notification.routes");
 const mlRoutes = require("./routes/ml.routes");
+const navigationRoutes = require("./routes/navigation.routes");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
@@ -28,6 +29,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/ml", mlRoutes);
+app.use("/api/navigation", navigationRoutes);
 
 app.get("/", (req, res) => {
   res.send("OK");

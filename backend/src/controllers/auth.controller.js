@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const LoginEvent = require("../models/LoginEvent");
 
 /* ================= REGISTER ================= */
 exports.register = async (req, res) => {
@@ -57,14 +58,21 @@ exports.login = async (req, res) => {
     }
 
     const token = jwt.sign(
-  {
-    id: user._id,
-    email: user.email,
-    role: user.role, // 👈 ADD THIS
-  },
-  process.env.JWT_SECRET,
-  { expiresIn: "7d" }
-);
+      {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    // Log this login for the ML model's login_frequency feature.
+    // Fire-and-forget: a logging failure never blocks a successful login.
+    LoginEvent.create({ userId: user._id }).catch((err) =>
+      console.error("Failed to log login event:", err.message)
+    );
+
     res.json({
       message: "Login successful",
       token,

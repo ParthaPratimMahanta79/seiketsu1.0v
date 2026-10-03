@@ -5,6 +5,16 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import "./Dashboard.css";
 
+// Login page lives at "/" (see App.js)
+const LOGIN_PATH = "/";
+
+// Red -> yellow -> green, interpolated by probability of High Engagement (0..1)
+function confidenceColor(p) {
+  const r = p < 0.5 ? 255 : Math.round(255 - (p - 0.5) * 2 * 255);
+  const g = p < 0.5 ? Math.round(p * 2 * 200) : 200;
+  return `rgb(${r}, ${g}, 70)`;
+}
+
 export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -58,15 +68,21 @@ export default function Dashboard() {
     return () => observer.disconnect();
   }, []);
 
+  const handleLogout = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.replace(LOGIN_PATH);
+  };
+
   const handlePredict = async () => {
     try {
-      const data = await predictUser({
-        requests_made: stats.approved || 1,
-        bins_navigated: 2,
-        reports_sent: stats.overflowReports || 0,
-        reports_approved: stats.approved || 0,
-        leaderboard_score: stats.rank || 1,
-      });
+      // Features are computed server-side from the user's real activity
+      const data = await predictUser();
+      if (data.engagement === undefined || data.confidence === undefined) {
+        console.error("ML prediction failed:", data);
+        alert("Couldn't get your engagement result. Try logging in again.");
+        return;
+      }
       console.log("ML Result:", data);
       setMlResult(data);
     } catch (err) {
@@ -115,6 +131,13 @@ export default function Dashboard() {
     }
   };
 
+  // mlResult.confidence is ALWAYS the probability of High Engagement (0..1),
+  // straight from the API — never flipped depending on the predicted label.
+  const highProb = mlResult?.confidence ?? null;
+  const highPct = highProb !== null ? Math.round(highProb * 100) : null;
+  const barColor = highProb !== null ? confidenceColor(highProb) : "#ccc";
+  const label = mlResult?.engagement === 1 ? "High Engagement" : "At Risk";
+
   return (
     <div className="dashboard-container">
 
@@ -128,6 +151,13 @@ export default function Dashboard() {
           <nav className="header-nav">
             <a href="#about" className="nav-anchor-btn">📖 About</a>
             <a href="#contact" className="nav-anchor-btn">📬 Contact</a>
+            <button
+              className="nav-anchor-btn"
+              onClick={handleLogout}
+              style={{ cursor: "pointer", font: "inherit" }}
+            >
+              🚪 Logout
+            </button>
           </nav>
         </div>
       </div>
@@ -169,22 +199,41 @@ export default function Dashboard() {
         <p className="success-msg">✅ Dustbin request submitted successfully!</p>
       )}
 
-    {/* ML RESULT */}
-{mlResult && (
-  <div style={{ marginTop: "20px", textAlign: "center" }}>
-   <div className={mlResult.engagement === 1 ? "high-user" : "risk-user"}>
-  <span className="badge-icon">
-    {mlResult.engagement === 1 ? "✓" : "!"}
-  </span>
-  <span>{mlResult.engagement === 1 ? "High Engagement User" : "At Risk User"}</span>
-  <span className="confidence-pill">
-    {mlResult.confidence !== undefined
-      ? Math.round(mlResult.confidence * 100) + "% confidence"
-      : ""}
-  </span>
-</div>
-  </div>
-)}
+      {/* ML RESULT — a single meter, colored and filled by confidence */}
+      {mlResult && (
+        <div style={{ maxWidth: 420, margin: "20px auto 0" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              fontWeight: "bold",
+              marginBottom: 6,
+              color: barColor,
+            }}
+          >
+            <span>{mlResult.engagement === 1 ? "✓" : "!"} {label}</span>
+            <span>{highPct}% likely engaged</span>
+          </div>
+          <div
+            style={{
+              width: "100%",
+              height: 14,
+              borderRadius: 8,
+              background: "#e5e7eb",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                width: `${highPct}%`,
+                height: "100%",
+                background: barColor,
+                transition: "width 0.4s ease, background 0.4s ease",
+              }}
+            />
+          </div>
+        </div>
+      )}
 
       {/* MAP */}
       <div className="map-wrapper">

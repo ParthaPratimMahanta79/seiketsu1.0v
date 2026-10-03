@@ -1,11 +1,21 @@
 import { useEffect, useState, useCallback } from "react";
 import "./AdminDashboard.css";
 
+// Login page lives at "/" (see App.js)
+const LOGIN_PATH = "/";
+
 export default function AdminDashboard() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const token = localStorage.getItem("token");
+
+  const handleLogout = () => {
+    // Clear everything and do a full reload so the auth state resets too
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.replace(LOGIN_PATH);
+  };
 
   const fetchRequests = useCallback(async () => {
     try {
@@ -52,7 +62,24 @@ export default function AdminDashboard() {
           <h1>🛠️ Admin Dashboard</h1>
           <p>Review and manage incoming dustbin requests</p>
         </div>
-        <div className="admin-badge">Admin Panel</div>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div className="admin-badge">Admin Panel</div>
+          <button
+            onClick={handleLogout}
+            style={{
+              padding: "8px 16px",
+              backgroundColor: "#ef4444",
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontWeight: "bold",
+              font: "inherit",
+            }}
+          >
+            🚪 Logout
+          </button>
+        </div>
       </div>
 
       {/* SUMMARY BAR */}
